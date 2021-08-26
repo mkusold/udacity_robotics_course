@@ -2,7 +2,7 @@
 
 This is the Udacity Robotics Submission for Project 1.
 
-Most of the Models in the World have been imported from online. 
+Most of the Models in the World have been imported from online.
 
 However, the hand-built model specified in the requirements that needs joints, has been made by me, and is present twice in the world, is called `Scout`' in the `models` directory. (`/models/Scout`)
 
@@ -24,3 +24,7 @@ Run this once per session:
 Opening World:
 
 `gazebo world/apartment.world`
+
+## Credits
+
+I sourced many models for the `apartment.world` file from: https://data.nvision2.eecs.yorku.ca/3DGEMS/
