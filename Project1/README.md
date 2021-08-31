@@ -1,4 +1,4 @@
-# MyRobot
+# Project1
 
 This is the Udacity Robotics Submission for Project 1.
 
