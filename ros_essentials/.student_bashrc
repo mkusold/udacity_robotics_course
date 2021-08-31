@@ -1,0 +1,10 @@
+###DO NOT DELETE!
+# Changing python PATH. 
+export PATH=/usr/bin:$PATH
+# Changing current directory
+cd /home/workspace/
+###
+alias sys-update="sudo apt-get update && sudo apt-get upgrade -y"
+echo "For Gazebo, run sys-update first"
+source /home/workspace/catkin_ws/devel/setup.bash
+echo "devel/setup.bash sourced"
