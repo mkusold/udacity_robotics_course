@@ -13,6 +13,10 @@ graph:
 urdf: ## Validates the my_robot xacro
 	@(cd ${CATKIN_WS}/src/${PKG_NAME}/urdf && check_urdf my_robot.xacro)
 
+.PHONY: build
+build: ## Re-builds the catkin workspace
+	@(cd ${CATKIN_WS} && catkin_make)
+
 # RUNNING
 .PHONY: run
 run: ## Starts the main launch file
