@@ -11,7 +11,7 @@
       <rightFrontJoint>front_right_wheel_hinge</rightFrontJoint>
       <leftRearJoint>back_left_wheel_hinge</leftRearJoint>
       <rightRearJoint>back_right_wheel_hinge</rightRearJoint>
-      <wheelSeparation>0.01</wheelSeparation>
+      <wheelSeparation>0.02</wheelSeparation>
       <wheelDiameter>0.04375</wheelDiameter>
       <torque>0.75</torque>
       <topicName>cmd_vel</topicName>

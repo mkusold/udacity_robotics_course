@@ -16,7 +16,7 @@
     <parent link="chassis"/>
     <axis xyz="0 1 0" rpy="0 0 0"/>
     <limit effort="10000" velocity="1000"/>
-    <dynamics damping="1.0" friction="1.0"/>
+    <dynamics damping="0.5" friction="1.0"/>
   </joint>
 
   <joint type="continuous" name="back_left_wheel_hinge">
@@ -25,7 +25,7 @@
     <parent link="chassis"/>
     <axis xyz="0 1 0" rpy="0 0 0"/>
     <limit effort="10000" velocity="1000"/>
-    <dynamics damping="1.0" friction="1.0"/>
+    <dynamics damping="0.5" friction="1.0"/>
   </joint>
 
   <joint type="continuous" name="front_right_wheel_hinge">
@@ -34,7 +34,7 @@
     <parent link="chassis"/>
     <axis xyz="0 1 0" rpy="0 0 0"/>
     <limit effort="10000" velocity="1000"/>
-    <dynamics damping="1.0" friction="1.0"/>
+    <dynamics damping="0.5" friction="1.0"/>
   </joint>
 
   <joint type="continuous" name="back_right_wheel_hinge">
@@ -43,7 +43,7 @@
     <parent link="chassis"/>
     <axis xyz="0 1 0" rpy="0 0 0"/>
     <limit effort="10000" velocity="1000"/>
-    <dynamics damping="1.0" friction="1.0"/>
+    <dynamics damping="0.5" friction="1.0"/>
   </joint>
 
   <joint type="fixed" name="camera_joint">
@@ -88,30 +88,30 @@
     </visual>
 
     <!-- <collision name='back_caster_collision'>
-      <origin xyz="-0.15 0 -0.05" rpy=" 0 0 0"/>
+      <origin xyz="-0.035 0 -0.007" rpy=" 0 0 0"/>
       <geometry>
-        <sphere radius="0.0499"/>
+        <sphere radius="0.01399"/>
       </geometry>
-    </collision> -->
+    </collision>
 
-    <!-- <visual name='back_caster_visual'>
-      <origin xyz="-0.15 0 -0.05" rpy=" 0 0 0"/>
+    <visual name='back_caster_visual'>
+      <origin xyz="-0.035 0 -0.007" rpy=" 0 0 0"/>
       <geometry>
-        <sphere radius="0.05"/>
+        <sphere radius="0.014"/>
       </geometry>
-    </visual> -->
+    </visual>
 
-    <!-- <collision name='front_caster_collision'>
-      <origin xyz="0.15 0 -0.05" rpy=" 0 0 0"/>
+    <collision name='front_caster_collision'>
+      <origin xyz="0.045 0 -0.007" rpy=" 0 0 0"/>
       <geometry>
-        <sphere radius="0.0499"/>
+        <sphere radius="0.01399"/>
       </geometry>
     </collision>
 
     <visual name='front_caster_visual'>
-      <origin xyz="0.15 0 -0.05" rpy=" 0 0 0"/>
+      <origin xyz="0.045 0 -0.007" rpy=" 0 0 0"/>
       <geometry>
-        <sphere radius="0.05"/>
+        <sphere radius="0.014"/>
       </geometry>
     </visual> -->
 
@@ -246,7 +246,7 @@
     </collision>
 
     <inertial>
-     <mass value="0.1"/>
+     <mass value="1e-5"/>
       <origin xyz="0 0 0" rpy="0 0 0" />
       <inertia
           ixx="1e-6" ixy="0" ixz="0"
