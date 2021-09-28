@@ -24,7 +24,7 @@ run: ## Starts the main launch file
 
 .PHONY: run-dev
 run-dev: ## Starts the launch file with development configurations
-	@(cd ${CATKIN_WS} && roslaunch ${PKG_NAME} world.launch use_rviz:=true world_file:=$(find my_robot)/worlds/maze.world)
+	@(cd ${CATKIN_WS} && roslaunch ${PKG_NAME} world.launch use_rviz:=false world:=empty)
 
 .PHONY: chase
 chase: ## Starts the ball_chaser
