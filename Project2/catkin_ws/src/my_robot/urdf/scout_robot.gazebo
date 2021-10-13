@@ -13,7 +13,7 @@
       <rightRearJoint>back_right_wheel_hinge</rightRearJoint>
       <wheelSeparation>0.02</wheelSeparation>
       <wheelDiameter>0.04375</wheelDiameter>
-      <torque>0.18</torque>
+      <torque>0.81178263292</torque>
       <topicName>cmd_vel</topicName>
       <commandTopic>cmd_vel</commandTopic>
       <odometryTopic>odom</odometryTopic>
