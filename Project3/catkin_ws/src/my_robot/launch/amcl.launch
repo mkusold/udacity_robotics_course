@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch>
+    <arg name="map_file" default="$(find my_robot)/maps/empty-apartment-map.yaml"/>
+    <arg name="x" default="0"/>
+    <arg name="y" default="0"/>
+
+    <param name="base_global_planner" value="navfn/NavfnROS" />
+    <param name="base_local_planner" value="base_local_planner/TrajectoryPlannerROS"/>
+
+    <!-- Map Server -->
+    <node name="map_server" pkg="map_server" type="map_server" args="$(arg map_file)" />
+    <!-- AMCL Node -->
+    <node name="amcl" pkg="amcl" type="amcl" output="screen">    
+        <!-- # Allowed number of particles # -->
+        <!-- (it's a tiny bot in a tiny apartment. We can scale down) -->
+        <param name="min_particles" value="50"/> <!-- Default: 500 -->
+        <param name="max_particles" value="500"/> <!-- Default: 5000 -->
+
+        <!-- # Translational (d), rotational (a) movement required before performing a filter update. # -->
+        <!-- lower values impacts how accurate the particles are predicted to the actual bots position -->
+        <param name="update_min_d" value="0.1"/> <!-- Default: 0.2 -->
+        <!-- 10 degrees == 0.174533 -->
+        <param name="update_min_a" value="0.174533"/> <!-- Default: À/6.0 radians 0.5236 -->
+
+        <!-- # Laser # -->
+        <!-- Scan range to be considered; -1.0 will cause the laser's reported minimum
+        range to be used. -->
+        <param name="laser_min_range" value="0.25"/> <!-- Default: -1 -->
+        <!-- How many evenly-spaced beams in each scan to be used when updating the filter. -->
+        <param name="laser_max_beams" value="60"/> <!-- Default: 30 -->
+        <param name="laser_z_hit" value="0.77"/>
+        <param name="laser_z_rand" value="0.33"/>
+        
+        <!-- # Odometry model parameters # -->
+        <!-- Which model to use, either "diff", "omni", "diff-corrected" or "omni-corrected". -->
+        <param name="odom_model_type" value="diff-corrected"/>
+        <!-- Which frame to use for odometry. -->
+        <param name="odom_frame_id" value="odom"/>
+        <!-- Which frame to use for the robot base -->
+        <param name="base_frame_id" value="robot_footprint"/>
+        <!-- The name of the coordinate frame published by the localization system -->
+        <param name="global_frame_id" value="map"/>
+        <!-- ## Specifies the expected noise in odometry's rotation estimate from the
+        rotational component of the robot's motion. ## -->
+        <!-- (skid steer has a lot of noise in odom) -->
+        <!-- 1 expected noise in odometry's rotation estimate from the rotational component -->
+        <param name="odom_alpha1" value="0.5"/> <!-- Default: 0.2 -->
+        <!-- 2 expected noise in odometry's rotation estimate from the translational component -->
+        <param name="odom_alpha2" value="0.5"/> <!-- Default: 0.2 -->
+        <!-- 3 expected noise in odometry's translation estimate from the translational component -->
+        <param name="odom_alpha3" value="0.5"/> <!-- Default: 0.2 -->
+        <!-- 4 expected noise in odometry's translation estimate from the rotational component -->
+        <param name="odom_alpha4" value="0.5"/> <!-- Default: 0.2 -->
+        <!-- Translation-related noise parameter (only used if model is "omni"). -->
+        <!-- <param name="odom_alpha5" value="0.2"/> Default: 0.2 -->
+        
+        <!-- # Pose # -->
+        <param name="initial_pose_x" value="$(arg x)"/>
+        <param name="initial_pose_y" value="$(arg y)"/>
+    </node>
+    <!-- Move Base -->
+    <node name="move_base" pkg="move_base" type="move_base" respawn="false" output="screen">
+        <rosparam file="$(find my_robot)/config/costmap_common_params.yaml" command="load" ns="global_costmap" />
+        <rosparam file="$(find my_robot)/config/costmap_common_params.yaml" command="load" ns="local_costmap" />
+        <rosparam file="$(find my_robot)/config/local_costmap_params.yaml" command="load" />
+        <rosparam file="$(find my_robot)/config/global_costmap_params.yaml" command="load" />
+        <rosparam file="$(find my_robot)/config/base_local_planner_params.yaml" command="load" />
+    </node>
+</launch>

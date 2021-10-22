@@ -1,0 +1,203 @@
+<?xml version='1.0'?>
+
+<robot name="scout_robot" xmlns:xacro="http://www.ros.org/wiki/xacro">
+  <xacro:include filename="$(find my_robot)/urdf/scout_robot.gazebo" />
+  <link name="robot_footprint"></link>
+
+  <joint name="robot_footprint_joint" type="fixed">
+    <origin xyz="0 0 0.015" rpy="0 0 0" />
+    <parent link="robot_footprint"/>
+    <child link="chassis" />
+  </joint>
+
+  <!-- WHEEL JOINT MACRO -->
+  <xacro:macro
+    name="wheel_joint" 
+    params="wheel_name ox oy">
+    <joint type="continuous" name="${wheel_name}_hinge">
+      <origin xyz="${ox} ${oy} 0" rpy="0 0 0"/>
+      <child link="${wheel_name}"/>
+      <parent link="chassis"/>
+      <axis xyz="0 1 0" rpy="0 0 0"/>
+      <limit effort="1000" velocity="1000"/>
+      <dynamics damping="1e-6" friction="1e-3"/>
+    </joint>
+  </xacro:macro>
+
+  <xacro:wheel_joint wheel_name="front_left_wheel" ox="0.02188" oy="0.0365" /> 
+  <xacro:wheel_joint wheel_name="back_left_wheel" ox="-0.03188" oy="0.0365" />
+  <xacro:wheel_joint wheel_name="front_right_wheel" ox="0.02188" oy="-0.0365" />
+  <xacro:wheel_joint wheel_name="back_right_wheel" ox="-0.03188" oy="-0.0365" />
+
+  <joint type="fixed" name="camera_joint">
+    <origin xyz="0.055 0 0.015" rpy="0 0 0"/>
+    <child link="camera"/>
+    <parent link="chassis"/>
+    <axis xyz="0 1 0" rpy="0 0 0"/>
+  </joint>
+
+  <joint type="fixed" name="hokuyo_joint">
+    <origin xyz="0.0 0 0.0425" rpy="0 0 0"/>
+    <child link="hokuyo"/>
+    <parent link="chassis"/>
+    <axis xyz="0 1 0" rpy="0 0 0"/>
+  </joint>
+
+<!-- CHASSIS MACRO
+    where x, y, height, and off_the_ground are in meters
+    mass is in kg
+   -->
+  <xacro:macro
+    name="chassis" 
+    params="name:=chassis x:=0.096 y:=0.047 height=0.045 mass:=0.26 off_the_ground:=0.015">
+    <link name='chassis'>
+      <inertial>
+        <mass value="${mass}"/>
+        <origin xyz="0 0 ${off_the_ground}" rpy=" 0 0 0"/>
+        <!-- INERTIA FORMULAS: https://en.wikipedia.org/wiki/List_of_moments_of_inertia -->
+        <inertia
+            ixx="${(1/12)*mass*((height*height)+(y*y))}" ixy="0" ixz="0"
+            iyy="${(1/12)*mass*((x*x)+(y*y))}" iyz="0"
+            izz="${(1/12)*mass*((x*x)+(height*height))}"
+        />
+      </inertial>
+
+      <collision name='${name}_collision'>
+        <origin xyz="0 0 ${off_the_ground}" rpy=" 0 0 0"/> 
+        <geometry>
+          <box size="${x} ${y} ${height}"/>
+        </geometry>
+      </collision>
+
+      <visual name='${name}_visual'>
+        <origin xyz="0 0 ${off_the_ground}" rpy=" 0 0 0"/>
+        <geometry>
+          <box size="${x} ${y} ${height}"/>
+        </geometry>
+      </visual>
+    </link>
+  </xacro:macro>
+  
+  <xacro:chassis />
+
+  <!-- WHEEL MACRO
+    where radius and length are in meters
+    mass is in kg
+   -->
+  <xacro:macro
+    name="wheel" 
+    params="name radius:=0.02188 length:=0.025 mass:=0.025">
+  <link name="${name}">
+      <visual name="${name}_visual">
+        <origin xyz="0 0 0" rpy="0 1.57 1.57" />
+        <geometry>
+          <cylinder length="${length}" radius="${radius}" />
+        </geometry>
+      </visual>
+
+      <collision name="${name}_collision">
+        <origin xyz="0 0 0" rpy="0 1.57 1.57" />
+        <geometry>
+          <cylinder length="${length}" radius="${radius}" />
+        </geometry>
+      </collision>
+
+      <!-- INERTIA FORMULAS: https://en.wikipedia.org/wiki/List_of_moments_of_inertia -->
+      <!-- This commented out formula is the one wikipedia suggests, but by using the izz, it doesn't look good in gazebo -->
+      <!-- <inertia
+            ixx="${((1/12)*mass)*((3*(radius*radius)) + (length * length))}" ixy="0" ixz="0"
+            iyy="${((1/12)*mass)*((3*(radius*radius)) + (length * length))}" iyz="0"
+            izz="${(1/2)*mass*(radius*radius)}"
+        /> -->
+      <inertial>
+        <mass value="${mass}"/>
+        <origin xyz="0 0 0" rpy="0 1.57 1.57" />
+        <inertia
+            ixx="${((1/12)*mass)*((3*(radius*radius)) + (length * length))}" ixy="0" ixz="0"
+            iyy="${((1/12)*mass)*((3*(radius*radius)) + (length * length))}" iyz="0"
+            izz="${((1/12)*mass)*((3*(radius*radius)) + (length * length))}"
+        />
+      </inertial>
+  </link>
+  </xacro:macro>
+
+  <xacro:wheel name="front_left_wheel"/>
+  <xacro:wheel name="back_left_wheel"/> 
+  <xacro:wheel name="front_right_wheel"/>
+  <xacro:wheel name="back_right_wheel"/>
+
+  <link name="camera">
+
+    <visual name="camera_visual">
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <box size="0.014 0.047 0.045"/>
+      </geometry>
+    </visual>
+
+    <collision name="camera_collision">
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <box size="0.014 0.047 0.045"/>
+      </geometry>
+    </collision>
+
+    <inertial>
+     <mass value="1e-5"/>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <inertia
+          ixx="1e-6" ixy="0" ixz="0"
+          iyy="1e-6" iyz="0"
+          izz="1e-6"
+      />
+    </inertial>
+
+  </link>
+
+  <link name="hokuyo">
+
+    <visual name="hokuyo_visual">
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="package://my_robot/meshes/hokuyo.dae" scale="1.00 0.9 0.12" />
+      </geometry>
+    </visual>
+
+    <collision name="hokuyo_collision">
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+         <box size="0.07 0.03 0.012"/>
+      </geometry>
+    </collision>
+
+    <inertial>
+     <mass value="1e-5"/>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <inertia
+          ixx="1e-6" ixy="0" ixz="0"
+          iyy="1e-6" iyz="0"
+          izz="1e-6"
+      />
+    </inertial>
+  </link>
+
+  <!-- Coloring-->
+  <gazebo reference="chassis">
+      <material>Gazebo/DarkGrey</material>
+  </gazebo>
+  <gazebo reference="front_left_wheel">
+      <material>Gazebo/Black</material>
+  </gazebo>
+  <gazebo reference="back_left_wheel">
+      <material>Gazebo/Black</material>
+  </gazebo>
+  <gazebo reference="front_right_wheel">
+      <material>Gazebo/Black</material>
+  </gazebo>
+  <gazebo reference="back_right_wheel">
+      <material>Gazebo/Black</material>
+  </gazebo>
+  <gazebo reference="camera">
+      <material>Gazebo/FlatBlack</material>
+  </gazebo>
+</robot>
