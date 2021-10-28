@@ -3,6 +3,8 @@
     <arg name="map_file" default="$(find my_robot)/maps/empty-apartment-map.yaml"/>
     <arg name="x" default="0"/>
     <arg name="y" default="0"/>
+    <!-- -89 degrees in radians -->
+    <arg name="a" default="-1.55334303"/>
 
     <param name="base_global_planner" value="navfn/NavfnROS" />
     <param name="base_local_planner" value="base_local_planner/TrajectoryPlannerROS"/>
@@ -28,8 +30,10 @@
         <param name="laser_min_range" value="0.25"/> <!-- Default: -1 -->
         <!-- How many evenly-spaced beams in each scan to be used when updating the filter. -->
         <param name="laser_max_beams" value="60"/> <!-- Default: 30 -->
-        <param name="laser_z_hit" value="0.77"/>
-        <param name="laser_z_rand" value="0.33"/>
+        <param name="laser_z_hit" value="0.98"/>  <!-- Default: 0.95 -->
+        <param name="laser_z_rand" value="0.05"/> <!-- Default: 0.05 -->
+        <param name="laser_z_short" value="0.1"/> <!-- Default: 0.1 -->
+        <param name="laser_z_max" value="0.05"/> <!-- Default: 0.05 -->
         
         <!-- # Odometry model parameters # -->
         <!-- Which model to use, either "diff", "omni", "diff-corrected" or "omni-corrected". -->
@@ -44,19 +48,18 @@
         rotational component of the robot's motion. ## -->
         <!-- (skid steer has a lot of noise in odom) -->
         <!-- 1 expected noise in odometry's rotation estimate from the rotational component -->
-        <param name="odom_alpha1" value="0.5"/> <!-- Default: 0.2 -->
+        <param name="odom_alpha1" value="0.01"/> <!--  Default: 0.2 -->
         <!-- 2 expected noise in odometry's rotation estimate from the translational component -->
-        <param name="odom_alpha2" value="0.5"/> <!-- Default: 0.2 -->
+        <param name="odom_alpha2" value="0.001"/> <!--  Default: 0.2 -->
         <!-- 3 expected noise in odometry's translation estimate from the translational component -->
-        <param name="odom_alpha3" value="0.5"/> <!-- Default: 0.2 -->
+        <param name="odom_alpha3" value="0.001"/> <!--  Default: 0.2 -->
         <!-- 4 expected noise in odometry's translation estimate from the rotational component -->
-        <param name="odom_alpha4" value="0.5"/> <!-- Default: 0.2 -->
-        <!-- Translation-related noise parameter (only used if model is "omni"). -->
-        <!-- <param name="odom_alpha5" value="0.2"/> Default: 0.2 -->
+        <param name="odom_alpha4" value="0.01"/> <!--  Default: 0.2 -->
         
         <!-- # Pose # -->
         <param name="initial_pose_x" value="$(arg x)"/>
         <param name="initial_pose_y" value="$(arg y)"/>
+        <param name="initial_pose_a" value="$(arg a)"/>
     </node>
     <!-- Move Base -->
     <node name="move_base" pkg="move_base" type="move_base" respawn="false" output="screen">
